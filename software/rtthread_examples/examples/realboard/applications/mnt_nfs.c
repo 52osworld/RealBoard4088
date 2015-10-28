@@ -1,3 +1,4 @@
+#include <rtthread.h>
 #include <components.h>
 
 int mountnfs(const char * path, const char* export_dir)

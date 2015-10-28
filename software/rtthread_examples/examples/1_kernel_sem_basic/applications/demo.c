@@ -32,6 +32,7 @@ static void rt_thread_entry1(void* parameter)
         /* 超时后判断是否刚好是10个OS Tick */
         if (rt_tick_get() - tick != 10)
         {
+						 rt_kprintf("detach static semaphore \n");
             rt_sem_detach(&static_sem);
             return;
         }

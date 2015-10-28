@@ -37,7 +37,19 @@ static void rt_thread_entry2(void* parameter)
         rt_thread_delay(RT_TICK_PER_SECOND/2);
     }
 }
+ALIGN(RT_ALIGN_SIZE)
+static char thread3_stack[1024];
+struct rt_thread thread3;
 
+static void rt_thread_entry3(void* parameter)
+{
+    while (1)
+    {
+	    rt_kprintf("thread3 run...\n");
+        /* sleep 0.5 second and switch to other thread */
+        rt_thread_delay(RT_TICK_PER_SECOND/4);
+    }
+}
 int demo_init(void)
 {
     //------- init demo1 thread
@@ -57,6 +69,13 @@ int demo_init(void)
                    &thread2_stack[0],
                    sizeof(thread2_stack),11,5);
     rt_thread_startup(&thread2);
-	
+		 //------- init demo2 thread
+    rt_thread_init(&thread3,
+                   "demo_thr3",
+                   rt_thread_entry3,
+                   RT_NULL,
+                   &thread3_stack[0],
+                   sizeof(thread3_stack),11,5);
+    rt_thread_startup(&thread3);
 	 return 0;
 }

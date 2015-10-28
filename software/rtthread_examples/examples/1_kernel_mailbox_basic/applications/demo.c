@@ -57,7 +57,7 @@ static void thread2_entry(void* parameter)
     rt_uint8_t count;
 
     count = 0;
-    while (count < 10)
+    while (1)
     {
         count ++;
         if (count & 0x1)

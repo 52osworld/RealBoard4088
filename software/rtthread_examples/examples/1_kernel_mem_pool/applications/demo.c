@@ -15,7 +15,34 @@ static struct rt_mempool mp;
 /* 指向线程控制块的指针 */
 static rt_thread_t tid1 = RT_NULL;
 static rt_thread_t tid2 = RT_NULL;
+static rt_thread_t tid0 = RT_NULL;
 
+/* 线程1入口 */
+static void thread1_entry0(void* parameter)
+{
+    int i,j = 1;
+    char *block;
+
+    while(j--)
+    {
+        for (i = 0; i < 24; i++)
+        {
+            /* 申请内存块 */
+            rt_kprintf("0 allocate No.%d\n", i);
+            if (ptr[i] == RT_NULL)
+            {
+                ptr[i] = rt_mp_alloc(&mp, RT_WAITING_FOREVER);
+            }
+        }
+
+        /* 继续申请一个内存块，因为已经没有内存块，线程应该被挂起 */
+        //block = rt_mp_alloc(&mp, RT_WAITING_FOREVER);
+        //rt_kprintf("allocate the block mem\n");
+        /* 释放这个内存块 */
+        //rt_mp_free(block);
+        //block = RT_NULL;
+    }
+}
 /* 线程1入口 */
 static void thread1_entry(void* parameter)
 {
@@ -24,7 +51,7 @@ static void thread1_entry(void* parameter)
 
     while(j--)
     {
-        for (i = 0; i < 48; i++)
+        for (i = 24; i < 48; i++)
         {
             /* 申请内存块 */
             rt_kprintf("allocate No.%d\n", i);
@@ -35,11 +62,11 @@ static void thread1_entry(void* parameter)
         }
 
         /* 继续申请一个内存块，因为已经没有内存块，线程应该被挂起 */
-        block = rt_mp_alloc(&mp, RT_WAITING_FOREVER);
-        rt_kprintf("allocate the block mem\n");
-        /* 释放这个内存块 */
-        rt_mp_free(block);
-        block = RT_NULL;
+//         block = rt_mp_alloc(&mp, RT_WAITING_FOREVER);
+//         rt_kprintf("allocate the block mem\n");
+//         /* 释放这个内存块 */
+//         rt_mp_free(block);
+//         block = RT_NULL;
     }
 }
 
@@ -77,6 +104,12 @@ int demo_init(void)
 
     /* 初始化内存池对象 ,每块分配的大小为80，但是另外还有大小为4的控制头，所以实际大小为84*/
     rt_mp_init(&mp, "mp1", &mempool[0], sizeof(mempool), 80);
+
+		tid0 = rt_thread_create("t0",
+        thread1_entry0, RT_NULL, /* 线程入口是thread1_entry, 入口参数是RT_NULL */
+        512, 8, 10);
+    if (tid0 != RT_NULL)
+        rt_thread_startup(tid0);
 
     /* 创建线程1 */
     tid1 = rt_thread_create("t1",

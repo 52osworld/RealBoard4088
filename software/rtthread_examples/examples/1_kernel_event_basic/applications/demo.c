@@ -45,6 +45,17 @@ static void thread1_entry(void *param)
         rt_kprintf("thread1: OR recv event 0x%x\n", e);
     }
     rt_kprintf("thread1 leave.\n");
+		rt_kprintf("thread1 in recv while().\n");
+		
+		while(1){
+			if (rt_event_recv(&event, ((1 << 3) | (1 << 5)),
+        RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR,
+        RT_WAITING_FOREVER, &e) == RT_EOK)
+    {
+        rt_kprintf("thread1: OR recv event 0x%x\n", e);
+    }
+
+		}
 }
 
 ALIGN(RT_ALIGN_SIZE)
@@ -56,6 +67,12 @@ static void thread2_entry(void *param)
     rt_kprintf("thread2: send event1\n");
     rt_event_send(&event, (1 << 3));
     rt_kprintf("thread2 leave.\n");
+		rt_kprintf("thread2 in send while().\n");
+		while(1){
+			rt_kprintf("thread2: send event1\n");
+			rt_event_send(&event, (1 << 3));
+			rt_thread_delay(RT_TICK_PER_SECOND*2);
+		}
 }
 
 ALIGN(RT_ALIGN_SIZE)
@@ -73,6 +90,12 @@ static void thread3_entry(void *param)
     rt_event_send(&event, (1 << 5));
 
     rt_kprintf("thread3 leave.\n");
+		rt_kprintf("thread3 in send while().\n");
+		while(1){
+			rt_kprintf("thread3: send event2\n");
+			rt_event_send(&event, (1 << 5));
+			rt_thread_delay(RT_TICK_PER_SECOND);
+		}
 }
 
 int demo_init(void)

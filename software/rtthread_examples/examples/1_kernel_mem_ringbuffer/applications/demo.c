@@ -26,14 +26,17 @@ static void thread1_entry(void* parameter)
     rt_uint8_t data_buffer[33];
     rt_uint32_t i = 1;
 
-    while(i--)
+    while(1)
     {
         rt_sem_take (sem,RT_WAITING_FOREVER);
+				 rt_kprintf("th1 take sem\n");
         result = rt_ringbuffer_get(&rb,&data_buffer[0],33);
-        rt_sem_release(sem);
-        if(RT_TRUE==result)
+        rt_kprintf("th1 release sem\n");
+			  rt_sem_release(sem);
+        //if(RT_TRUE==result)
+				if(RT_FALSE!=result)
 				{
-        rt_kprintf("%s\n",data_buffer);
+        rt_kprintf(" th1 read data buffer: %s\n",data_buffer);
         }
         rt_thread_delay(5);
     }
@@ -48,7 +51,7 @@ static void thread2_entry(void *parameter)
     rt_uint8_t data_buffer[33];
 
     setchar = 0x21;
-    while(i--)
+    while(1)
     {
         for (index = 0; index < 32; index++)
         {
@@ -61,12 +64,14 @@ static void thread2_entry(void *parameter)
         data_buffer[32] = '\0'; 
 
         rt_sem_take(sem,RT_WAITING_FOREVER);
-
+				rt_kprintf("th2 take sem\n");	
         result = rt_ringbuffer_put(&rb,&data_buffer[0],33);
-				 if(RT_TRUE==result)
+				// if(RT_TRUE==result)
+				if(RT_FALSE!=result)
 				{
-        rt_kprintf("write buffer success!\n");
+        rt_kprintf("th2 write buffer success!\n");
         }
+				rt_kprintf("th2 realease sem\n");
         rt_sem_release(sem);
         
         rt_thread_delay(10);

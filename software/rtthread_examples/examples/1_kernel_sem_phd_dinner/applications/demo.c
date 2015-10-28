@@ -76,7 +76,7 @@ void put_forks(int i)
     /* 进入临界区*/
     rt_sem_take(&sem_lock, RT_WAITING_FOREVER);
     phd_state[i] = THINKING;
-
+		rt_kprintf("%d Put forks\n",i);
     test(LEFT_PHD(i));
     test(RIGHT_PHD(i));
     /* 退出临界区*/
@@ -89,11 +89,15 @@ void test(int i)
         phd_state[LEFT_PHD(i)] != EATING &&
         phd_state[RIGHT_PHD(i)] != EATING)
     {
+				rt_kprintf("%d Left&Right is not eating\n",i);
         phd_state[i] = EATING;
 
         /* 可以得到叉子，故发布信号量 */
         rt_sem_release(&sem[i]);
     }
+		else{
+			rt_kprintf("%d Left | Right is  eating\n",i);
+		}
 }
 
 

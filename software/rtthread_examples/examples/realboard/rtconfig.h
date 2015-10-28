@@ -252,9 +252,9 @@
 // <bool name="RTGUI_IMAGE_TJPGD" description="support JPEG image format with TJPGD" default="true" />
 #define RTGUI_IMAGE_TJPGD
 // <bool name="RTGUI_IMAGE_PNG" description="support PNG image format with libpng" default="false" />
-// #define RTGUI_IMAGE_PNG
+//#define RTGUI_IMAGE_PNG
 // <bool name="RTGUI_IMAGE_LODEPNG" description="support PNG image format with LodePNG" default="true" />
-#define RTGUI_IMAGE_LODEPNG
+//#define RTGUI_IMAGE_LODEPNG
 
 #define RTGUI_USING_NOTEBOOK_IMAGE
 // <bool name="RTGUI_USING_HW_CURSOR" description="Using hardware cursor in RTGUI" default="true" />

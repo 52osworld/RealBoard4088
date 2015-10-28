@@ -25,7 +25,7 @@ static void ui_thread_entry(void* parameter)
     rtgui_container_set_box(RTGUI_CONTAINER(win), box);
 
     /* create the 'hello world' label */
-	label = rtgui_label_create("Hello World");
+	label = rtgui_label_create("Hello World I love U! OneShu!");
 	rtgui_container_add_child(RTGUI_CONTAINER(win), RTGUI_WIDGET(label));
 
     rtgui_container_layout(RTGUI_CONTAINER(win));

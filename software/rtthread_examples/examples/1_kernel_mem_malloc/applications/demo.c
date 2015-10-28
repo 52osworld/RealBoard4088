@@ -10,7 +10,7 @@
 
 /* 线程TCB和栈*/
 ALIGN(RT_ALIGN_SIZE)
-char thread1_stack[512];
+char thread1_stack[1024];
 struct rt_thread thread1;
 
 /* 线程入口*/
@@ -21,22 +21,32 @@ void thread1_entry(void* parameter)
     /* 对指针清零*/
     for (i = 0; i < 20; i ++) 
         ptr[i] = RT_NULL;
-    for(j = 0; j < 2; j ++ )
-    {
+   // for(j = 0; j < 2; j ++ )
+    //{
         for (i = 0; i <20; i++)
         {
         /* 每次分配(1 <<i)大小字节数的内存空间*/
-            ptr[i] = rt_malloc(1 <<i);
+            ptr[i] = rt_malloc(0x20);
             /* 如果分配成功*/
             if (ptr[i] != RT_NULL)
             {
                 rt_kprintf("get memory: 0x%x\n", ptr[i]);
                 /* 释放内存块*/
-                rt_free(ptr[i]);
-                ptr[i] = RT_NULL;
+                //rt_free(ptr[i]);
+                //ptr[i] = RT_NULL;
             }
         }
-    }
+   // }
+		//for(j = 0; j < 2; j ++ )
+    //{
+        for (i = 0; i <20; i++)
+        {
+					
+					rt_kprintf("free memory ptr[%d]: 0x%x\n", i,ptr[i]);
+					rt_free(ptr[i]);
+          ptr[i] = RT_NULL;
+			}
+		//}
 }
 
 

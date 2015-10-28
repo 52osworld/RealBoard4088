@@ -24,7 +24,7 @@ struct rt_thread thread1;
 static void thread1_entry(void* parameter)
 {
     char buf[120];
-
+		int i=0;
     while (1)
     {
         rt_memset(&buf[0], 0, sizeof(buf));
@@ -32,11 +32,17 @@ static void thread1_entry(void* parameter)
         /* 从消息队列中接收消息 */
         if (rt_mq_recv(&mq, &buf[0], sizeof(buf), RT_WAITING_FOREVER) == RT_EOK)
         {
-            rt_kprintf("thread1: recv msg from msg queue, the content:%s\n", buf);
+            
             
             /* 检查是否收到了紧急消息 */
             if (rt_strcmp(buf, MSG_VIP) == 0)
-                break;
+							 rt_kprintf("thread1: got an urgent message\n");
+                //break;
+						else{
+							
+							rt_kprintf("thread1: recv msg from msg queue, the content:%s\n",buf);
+							i++;
+						}
         }
 
         /* 延时1s */
@@ -63,10 +69,11 @@ static void thread2_entry(void* parameter)
         /* 发送消息到消息队列中 */
         result = rt_mq_send(&mq, &buf[0], sizeof(buf));
         if ( result == -RT_EFULL)
-            break;
+					rt_kprintf("thread2: message queue full\n");
+           // break;
 
         rt_kprintf("thread2: send message - %s\n", buf);
-
+				rt_thread_delay(RT_TICK_PER_SECOND/2);
         i++;
     }
 
@@ -84,7 +91,17 @@ static void thread3_entry(void* parameter)
 
     rt_thread_delay(RT_TICK_PER_SECOND * 5);
     rt_kprintf("thread3: send an urgent message <%s> \n", msg);
-
+		
+		while(1){
+			result = rt_mq_urgent(&mq, &msg[0], sizeof(msg));
+        
+        if (result == RT_EOK){
+            rt_thread_delay(RT_TICK_PER_SECOND*2);
+					rt_kprintf("thread3: send an urgent message <%s> \n", msg);
+				}
+		}
+	
+	
     /* 发送紧急消息到消息队列中 */
     do {
         result = rt_mq_urgent(&mq, &msg[0], sizeof(msg));

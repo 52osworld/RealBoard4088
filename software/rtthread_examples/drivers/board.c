@@ -48,6 +48,7 @@ void SysTick_Handler(void)
 /**
  * This function will initial LPC17xx board.
  */
+extern int rt_led_hw_init(void);
 void rt_hw_board_init()
 {
     /* NVIC Configuration */
@@ -64,7 +65,8 @@ void rt_hw_board_init()
     SysTick_Config(SystemCoreClock / RT_TICK_PER_SECOND - 1);
     /* set pend exception priority */
     NVIC_SetPriority(PendSV_IRQn, (1 << __NVIC_PRIO_BITS) - 1);
-
+		
+		rt_led_hw_init();	
     /*init uart device*/
     rt_hw_uart_init();
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);

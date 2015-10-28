@@ -101,8 +101,8 @@ static void rt_thread_entry1(void* parameter)
         rt_mutex_delete(dynamic_mutex);
         return;
     }
-
     rt_kprintf("thread1 take a dynamic mutex, done.\n");
+
     /* É¾³ı»¥³âÁ¿¶ÔÏó */
     rt_mutex_delete(dynamic_mutex);
 }

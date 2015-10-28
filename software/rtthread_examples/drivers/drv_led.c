@@ -87,14 +87,13 @@ static rt_size_t rt_led_write(rt_device_t dev, rt_off_t pos,
 
     RT_ASSERT(dev == &led.parent);
     RT_ASSERT((pos + size) <= LED_NUM);
-
     for (index = 0; index < nw; index++)
     {
         if (*value++)
-        {
+				{
             led.ctrl[pos + index].port->CLR |= (1 << led.ctrl[pos + index].num);
         }
-        else
+				else
         {
             led.ctrl[pos + index].port->SET |= (1 << led.ctrl[pos + index].num);
         }
@@ -139,6 +138,7 @@ INIT_DEVICE_EXPORT(rt_led_hw_init);
 void led_test(rt_uint32_t led_num, rt_uint32_t value)
 {
     rt_uint8_t led_value = value;
+		
     rt_led_write(&led.parent, led_num, &led_value, 1);
 }
 FINSH_FUNCTION_EXPORT(led_test, e.g: led_test(0, 100).)
