@@ -74,7 +74,7 @@ int demo_init(void)
 
     t1 = rt_thread_create("t1",
         thread1_entry, RT_NULL,
-        512, 7, 10);
+        512,5, 10);
     if (t1 != RT_NULL)
         rt_thread_startup(t1);
     
